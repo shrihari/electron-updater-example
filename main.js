@@ -85,8 +85,21 @@ autoUpdater.on('download-progress', (progressObj) => {
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   sendStatusToWindow(log_message);
 })
-autoUpdater.on('update-downloaded', (ev, info) => {
-  sendStatusToWindow('Update downloaded; will install in 5 seconds');
+// autoUpdater.on('update-downloaded', (ev, info) => {
+//   sendStatusToWindow('Update downloaded; will install in 5 seconds');
+// });
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox({
+    title: 'Install Updates',
+    message: 'Updates downloaded, do you wanna install?',
+    buttons: ["Okay", "Later"]
+  }, (res) => {
+    if(res == 0) {
+      autoUpdater.quitAndInstall()
+    } else {
+      return;
+    }
+  })
 });
 app.on('ready', function() {
   // Create the Menu
